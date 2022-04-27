@@ -11,6 +11,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  TextEditingController _heightController = TextEditingController();
+  TextEditingController _weightController = TextEditingController();
+  double _bmiResult = 0;
+  String _textResult = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   width: 130,
                   child: TextField(
+                    controller: _heightController,
                     style: TextStyle(
                         fontSize: 35,
                         fontWeight: FontWeight.w300,
@@ -54,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   width: 130,
                   child: TextField(
+                    controller: _weightController,
                     style: TextStyle(
                         fontSize: 35,
                         fontWeight: FontWeight.w300,
@@ -75,42 +82,61 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 30,
             ),
-            Container(
-              child: Text("Calculate",
-                  style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: accentColor)),
+            GestureDetector(
+              onTap: () {
+                double _h = double.parse(_heightController.text);
+                double _w = double.parse(_weightController.text);
+                setState(() {
+                  _bmiResult = _w / (_h * _h);
+                  if (_bmiResult > 25) {
+                    _textResult = "Over Weight";
+                  } else if (_bmiResult >= 18.5 && _bmiResult <= 25) {
+                    _textResult = "Normal Weight";
+                  } else {
+                    _textResult = "Under Weight";
+                  }
+                });
+              },
+              child: Container(
+                child: Text("Calculate",
+                    style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: accentColor)),
+              ),
             ),
             const SizedBox(
               height: 50,
             ),
             Container(
-              child: Text("10",
+              child: Text(_bmiResult.toStringAsFixed(2),
                   style: TextStyle(fontSize: 80, color: accentColor)),
             ),
             const SizedBox(
               height: 10,
             ),
-            Container(
-              child: Text("Normal Weight",
-                  style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w400,
-                      color: accentColor)),
+            Visibility(
+              visible: _textResult.isNotEmpty,
+              child: Container(
+                child: Text(_textResult,
+                    style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w400,
+                        color: accentColor)),
+              ),
             ),
             const SizedBox(
               height: 50,
             ),
-            const LeftBar(barWidth: 40),
+            const LeftBar(barWidth: 30),
             const SizedBox(
               height: 10,
             ),
-            const LeftBar(barWidth: 70),
+            const LeftBar(barWidth: 60),
             const SizedBox(
               height: 10,
             ),
-            const LeftBar(barWidth: 100),
+            const LeftBar(barWidth: 90),
             const SizedBox(
               height: 30,
             ),
